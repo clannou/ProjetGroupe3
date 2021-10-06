@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from 'axios'
 import { ChakraProvider } from "@chakra-ui/react";
+import NotFound from "./pages/NotFound";
 //import { useHistory } from "react-router-dom";
 import { Flex,
   Heading,
