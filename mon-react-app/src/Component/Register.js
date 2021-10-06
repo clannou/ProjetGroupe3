@@ -19,8 +19,6 @@ import { extendTheme } from "@chakra-ui/react"
 import { createBreakpoints } from "@chakra-ui/theme-tools"
 import { FaUserAlt, FaLock, FaMailBulk } from "react-icons/fa";
 
-import Login from "./Login"
-
 const CFaUserAlt = chakra(FaUserAlt);
 const CFaLock = chakra(FaLock);
 const CFaMailBulk = chakra(FaMailBulk)
@@ -36,7 +34,7 @@ const breakpoints = createBreakpoints({
 
 const theme = extendTheme({ breakpoints })
 
-const App = () => {
+const Register = () => {
 
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -64,6 +62,7 @@ const App = () => {
     data).then(response => {
       let obj = response.data;
       alert(obj)
+      console.log(obj)
     }).catch(error => {
       alert(error)
     })
@@ -156,7 +155,6 @@ const App = () => {
             <Button
               
               borderRadius={10}
-              type="submit"
               variant="solid"
               colorScheme="teal"
               width="full"
@@ -182,4 +180,4 @@ const App = () => {
   );
 };
   
-export default App;
+export default Register;

@@ -40,7 +40,7 @@ const Login = () => {
   const history = useHistory();
   
   const handleRoute = () =>{ 
-    history.push("/Home");
+    history.push("/Register");
   }
 
   const login = () => {
@@ -53,15 +53,19 @@ const Login = () => {
       email: email,
       password: password,
     }
-    /*
+    
     axios.post('http://127.0.0.1:5000/api/users/login',
     data).then(response => {
       let obj = response.data;
-      alert(obj)
+      console.log(obj)
+      console.log(obj['admin'])
+      if (obj['admin'] == false)
+        history.push("/Home");
+      else 
+        history.push("/AdminHome");
     }).catch(error => {
-      alert(error)
+      console.log(error)
     })
-    */
   }
 
   const [showPassword, setShowPassword] = useState(false);
@@ -136,7 +140,6 @@ const Login = () => {
             <Button
               
               borderRadius={10}
-              type="submit"
               variant="solid"
               colorScheme="teal"
               width="full"

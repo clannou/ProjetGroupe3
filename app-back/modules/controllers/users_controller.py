@@ -1,12 +1,16 @@
-from flask import request, Blueprint, jsonify, g
+import os
+from flask import request, Blueprint, jsonify, g, Flask
 from models.user import User, UserSchema
 from modules.useful import custom_response
 from modules.controllers import db
+from werkzeug.utils import secure_filename
+from modules.app import app
 from auth.tokens import Auth
 
 user_api = Blueprint('user', __name__)
 user_schema = UserSchema()
 
+ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 
 @user_api.route('/register', methods=['POST'])
 def create():
@@ -36,8 +40,6 @@ def login():
     email = req_data['email']
     password = req_data['password']
     if email and password:
-        print(email)
-        print(password)
 
         user = User.get_user_by_email(email)
         if user is None:
@@ -50,3 +52,25 @@ def login():
                                 'admin': isAdmin
                                 }, 200)
     return custom_response({'error': "Empty Form Login"}, 400)
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+@user_api.route('/uploadfile', methods=['POST'])
+def upload_file():
+    if 'file' not in request.files:
+        print("no file")
+        return custom_response({'error': "No file"}, 400)
+    file = request.files['file']
+    if file.filename == '':
+        print("no file selected")
+        return custom_response({'error': "No selected file"}, 400)
+    if file and allowed_file(file.filename):
+        filename = secure_filename(file.filename)
+        print(filename)
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        return custom_response({'success': "file " + filename + " uploaded successfully " + filename}, 200)
+    print("empty form")
+    return custom_response({'error': "Empty Form"}, 400)
+

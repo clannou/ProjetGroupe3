@@ -1,8 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import Router from './Router';
-import Login from './Login';
+import Router from './Component/Router';
 import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
