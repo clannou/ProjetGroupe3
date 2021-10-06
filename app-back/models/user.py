@@ -1,6 +1,7 @@
 from marshmallow import fields, Schema
 import datetime
 from . import db
+from sqlalchemy.orm import relationship
 
 from werkzeug.security import check_password_hash, generate_password_hash
 

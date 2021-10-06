@@ -11,7 +11,7 @@ app.config['MANDRILL_DEFAULT_FROM'] = '...'
 app.config['QOLD_SUPPORT_EMAIL'] = '...'
 app.config['CORS_HEADERS'] = 'Content-Type'
 
-UPLOAD_FOLDER = './Resources/uploads'
+UPLOAD_FOLDER = './Resources/uploads/'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 def create_app(config_key='development'):
