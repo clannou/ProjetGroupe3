@@ -44,7 +44,6 @@ def login():
     email = req_data['email']
     password = req_data['password']
     if email and password:
-
         user = User.get_user_by_email(email)
         if user is None:
             return custom_response({'error': "Incorrect email or password"}, 400)
@@ -56,6 +55,21 @@ def login():
                                 'admin': isAdmin
                                 }, 200)
     return custom_response({'error': "Empty Form Login"}, 400)
+
+@user_api.route('/profile', methods=['POST'])
+def display_profile():
+    req_data = request.get_json()
+    mandatory_data = ['email']
+    missing_data = check_missing_parameter(mandatory_data, req_data)
+    if missing_data:
+        return custom_response({
+            'error': 'Données non envoyé ' + User.user_mandatory_data_to_string(missing_data)
+        }, 400)
+    email = req_data['email']
+    user = User.get_user_by_email(email)
+    if user is None:
+        return custom_response({'error': "User doesn't exist"}, 400)
+    return jsonify({ 'success': User.user_to_dict(user) })
 
 def allowed_file(filename):
     return '.' in filename and \
@@ -128,7 +142,7 @@ def download_file():
         return send_file("." + path, as_attachment=True)
     return custom_response({'error': "You are not allowed to download: " + filename}, 400)
 
-@user_api.route('/delete_file', methods=['DELETE'])
+@user_api.route('/delete_file', methods=['POST'])
 def delete_item():
     req_data = request.get_json()
     mandatory_data = ['email', 'filename']
