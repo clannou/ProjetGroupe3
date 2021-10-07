@@ -6,7 +6,7 @@ class Development:
     MYSQL_HOST = 'localhost'
     MYSQL_USER = 'root'
     MYSQL_PASSWORD = 'iiluskyii75'
-    MYSQL_DB = 'PersonnalProject'
+    MYSQL_DB = 'sharingFiles'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_DATABASE_URI = f"mysql://{MYSQL_USER}:{MYSQL_PASSWORD}@{MYSQL_HOST}/{MYSQL_DB}"
 

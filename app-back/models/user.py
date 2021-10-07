@@ -70,9 +70,14 @@ class User(db.Model):
     @staticmethod
     def user_is_admin(email):
         user = User.query.filter_by(email=email).first()
-        if user.admin == True:
+        if user.admin == 1:
             return True
         return False
+
+    @staticmethod
+    def list_all_users():
+        user = User.query.filter_by(admin=0).all()
+        return user
 
     @staticmethod
     def user_mandatory_data_to_string(li_data):
@@ -80,6 +85,19 @@ class User(db.Model):
         for d in li_data:
             res += d + ", "
         return res[:-2]
+
+    @staticmethod
+    def user_to_dict(user_sql):
+        print(user_sql)
+        if user_sql is not None:
+            return {
+                'id': user_sql.id,
+                'username': user_sql.username,
+                'email': user_sql.email,
+                'created': user_sql.created
+            }
+        else:
+            return None
 
     def __repr(self):
         return '<id {}>'.format(self.id)

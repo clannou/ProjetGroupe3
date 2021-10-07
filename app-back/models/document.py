@@ -51,6 +51,13 @@ class Document(db.Model):
         return False
 
     @staticmethod
+    def file_exist(path):
+        document = Document.query.filter_by(path=path).first()
+        if document is None:
+            return False
+        return True
+
+    @staticmethod
     def document_to_dict(document_sql):
         if document_sql is not None:
             return {
