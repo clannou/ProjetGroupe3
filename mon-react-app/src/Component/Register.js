@@ -61,8 +61,7 @@ const Register = () => {
     axios.post('http://127.0.0.1:5000/api/users/register',
     data).then(response => {
       let obj = response.data;
-      alert(obj)
-      console.log(obj)
+      history.push("/Login");
     }).catch(error => {
       alert(error)
     })

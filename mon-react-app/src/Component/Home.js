@@ -5,12 +5,12 @@ import axios from 'axios';
 
 import '../App.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faDownload } from '@fortawesome/free-solid-svg-icons'
-import { faTrash } from '@fortawesome/free-solid-svg-icons'
+import { faDownload, faTrash } from '@fortawesome/free-solid-svg-icons'
 import Navigation from './Nav';
 
 const downloadIcon = <FontAwesomeIcon icon={ faDownload } />
 const trashIcon = <FontAwesomeIcon icon={ faTrash } />
+
 
 
 const Home = () => {
@@ -23,7 +23,7 @@ const Home = () => {
 
     const fetchDocuments = async () => {
       let body = {
-        'email': 'chen_l@etna-alternance.net'
+        'email': localStorage.getItem('email')
       }
       const { data } = await axios.post(
         "http://127.0.0.1:5000/api/users/list_uploadfiles", body
@@ -46,7 +46,7 @@ const Home = () => {
       console.log("ok")
       let body = {
         'filename': document_name,
-        'email': 'chen_l@etna-alternance.net'
+        'email': localStorage.getItem('email')
       }
 
       axios.post("http://127.0.0.1:5000/api/users/download_file", body ,{responseType: 'blob'})
@@ -69,6 +69,22 @@ const Home = () => {
 
     }
 
+    const deleteFile = (document_name) => {
+      let body = {
+        'filename': document_name,
+        'email': localStorage.getItem('email')
+      }
+
+      axios.post("http://127.0.0.1:5000/api/users/delete_file", body)
+      .then((response) => {
+          console.log(response)
+      }).catch((response) => {
+          console.error("Could not delete file from the backend.", response);
+      });
+      window.location.reload();
+
+    }
+
     const onFileUpload = () => {
     
       // Create an object of formData
@@ -81,7 +97,7 @@ const Home = () => {
         selectedFile.name
       );
 
-      formData.append("email", "chen_l@etna-alternance.net")
+      formData.append("email", localStorage.getItem('email'))
     
       // Details of the uploaded file
       console.log(selectedFile);
@@ -136,7 +152,7 @@ const Home = () => {
                   <td>{documentt.created}</td>
                   <td>
                   <button onClick={function(e) { downloadFile(documentt.name); }}>{downloadIcon}</button> 
-                  {/* <button onClick={function(e) { deleteFile(documentt.name)}}>{trashIcon}</button> */}
+                   <button onClick={function(e) { deleteFile(documentt.name)}}>{trashIcon}</button>
                   </td>
                 </tr>
                 ))}
@@ -149,10 +165,10 @@ const Home = () => {
 
           <div>
             <div>
-              <label for="file">Choisir le fichier à upload</label>
+              <label for="file">Choisir le fichier à upload ('txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif')</label>
               <input type="file" onChange={(e) => {
                         setSelectedFile(e.target.files[0]);
-                      }} />
+                      }} /> 
               <button onClick={onFileUpload}>Upload !</button>
             </div>
           

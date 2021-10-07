@@ -14,7 +14,7 @@ import signOutAlt from '@iconify/icons-fa-solid/sign-out-alt'
 const LogoutIcon = <Icon icon={ signOutAlt } />
 
 
-export default function Navigation() {
+export default function NavigationAdmin() {
     const history = useHistory();
 
     const logout = () =>{ 
@@ -29,8 +29,7 @@ export default function Navigation() {
         <Navbar.Toggle />
         <Navbar.Collapse>
           <Nav className="justify-content-center">
-            <Nav.Link class="navbar-link" href="Home">Envoyer des fichiers</Nav.Link>
-            <Nav.Link class="navbar-link" href="#foo">Mes informations personnelles</Nav.Link>
+            <Nav.Link class="navbar-link" href="AdminHome">Liste des utilisateurs</Nav.Link>
           </Nav>
           <button 
           onClick={logout}

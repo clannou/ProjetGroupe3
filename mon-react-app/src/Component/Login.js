@@ -57,12 +57,12 @@ const Login = () => {
     axios.post('http://127.0.0.1:5000/api/users/login',
     data).then(response => {
       let obj = response.data;
-      console.log(obj)
-      console.log(obj['admin'])
-      if (obj['admin'] == false)
+      localStorage.setItem('email', email);
+      if (obj['admin'] == false) {
         history.push("/Home");
-      else 
+      } else {
         history.push("/AdminHome");
+      }
     }).catch(error => {
       console.log(error)
     })
