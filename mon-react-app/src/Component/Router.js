@@ -7,8 +7,8 @@ import { BrowserRouter, Route } from "react-router-dom";
 const Router = () => {
     return (
         <BrowserRouter>
-            <Route path='/Register' component={Register} />
             <Route path='/Login' component={Login} />
+            <Route path='/Register' component={Register} />
             <Route path='/Home' component={Home} />
             <Route path='/AdminHome' component={AdminHome} />
         </BrowserRouter>

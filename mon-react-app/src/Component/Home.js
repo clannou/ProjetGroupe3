@@ -1,9 +1,17 @@
 import React, { useState, useEffect, Component } from "react";
 import { saveAs } from 'file-saver';
-import { ChakraProvider } from "@chakra-ui/react";
 import { useHistory } from "react-router-dom";
-import { Button } from "@chakra-ui/react";
 import axios from 'axios';
+
+import '../App.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faDownload } from '@fortawesome/free-solid-svg-icons'
+import { faTrash } from '@fortawesome/free-solid-svg-icons'
+import Navigation from './Nav';
+
+const downloadIcon = <FontAwesomeIcon icon={ faDownload } />
+const trashIcon = <FontAwesomeIcon icon={ faTrash } />
+
 
 const Home = () => {
     var FileSaver = require('file-saver');
@@ -110,43 +118,48 @@ const Home = () => {
     };
 
     return (
-        <ChakraProvider>
-            <h1>Welcome to the home page !</h1>
-        <Button
-            onClick={logout}
-        >
-        Logout
-        </Button>
+      <div className="app-container">
+        <Navigation/>
+        <h2>Liste des documents précédemment chargés</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>Nom du document</th>
+                <th>Date de création</th>
+                <th>Télécharger</th>
+              </tr>
+            </thead>
+            <tbody>
+              {documentss.map((documentt)=> (
+                <tr>
+                  <td>{documentt.name}</td>
+                  <td>{documentt.created}</td>
+                  <td>
+                  <button onClick={function(e) { downloadFile(documentt.name); }}>{downloadIcon}</button> 
+                  {/* <button onClick={function(e) { deleteFile(documentt.name)}}>{trashIcon}</button> */}
+                  </td>
+                </tr>
+                ))}
+                
+            </tbody>
+          </table>
 
-        <br></br>
-        <br></br>
+        <h2>Envoyez vos documents !</h2>
+      
 
-        <div>
-        {documentss.map((documentt) => (
+          <div>
             <div>
-              {documentt.created} - {documentt.name} | <button onClick={function(e) { downloadFile(documentt.name); }}>Download</button> 
+              <label for="file">Choisir le fichier à upload</label>
+              <input type="file" onChange={(e) => {
+                        setSelectedFile(e.target.files[0]);
+                      }} />
+              <button onClick={onFileUpload}>Upload !</button>
             </div>
-          ))}
-        </div>
-
-        <br></br>
-
-        <div>
-              <h3>
-                File Upload
-              </h3>
-              <div>
-                  <input type="file" onChange={(e) => {
-                    setSelectedFile(e.target.files[0]);
-                  }} />
-                  <button onClick={onFileUpload}>
-                    Upload!
-                  </button>
-              </div>
-            {fileData}
+          
+          {fileData}
           </div>
+      </div>
 
-        </ChakraProvider>
     );
 };
 
