@@ -30,7 +30,7 @@ export default function Navigation() {
         <Navbar.Collapse>
           <Nav className="justify-content-center">
             <Nav.Link class="navbar-link" href="Home">Envoyer des fichiers</Nav.Link>
-            <Nav.Link class="navbar-link" href="#foo">Mes informations personnelles</Nav.Link>
+            <Nav.Link class="navbar-link" href="Settings">Mes informations personnelles</Nav.Link>
           </Nav>
           <button 
           onClick={logout}

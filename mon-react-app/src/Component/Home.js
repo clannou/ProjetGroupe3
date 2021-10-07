@@ -16,10 +16,8 @@ const trashIcon = <FontAwesomeIcon icon={ faTrash } />
 const Home = () => {
     var FileSaver = require('file-saver');
     const history = useHistory();
-
-    const logout = () =>{ 
-        history.push("/Login");
-    }
+    const [documentss, setDocuments] = useState([]);
+    const [selectedFile, setSelectedFile] = useState("");
 
     const fetchDocuments = async () => {
       let body = {
@@ -33,14 +31,19 @@ const Home = () => {
       console.log(data_documents);
     };
 
-    const [documentss, setDocuments] = useState([]);
 
     useEffect(() => {
-      fetchDocuments();
+        const adminEmail = localStorage.getItem('adminEmail');
+        if (adminEmail) {
+            history.push('/AdminHome');
+        } else {
+            const email = localStorage.getItem('email');
+            if(!email) {
+              history.push('/Login');
+            }
+            fetchDocuments();
+        }
     }, []);
-
-    const [selectedFile, setSelectedFile] = useState("");
-
 
     const downloadFile = (document_name) => {
       console.log("ok")

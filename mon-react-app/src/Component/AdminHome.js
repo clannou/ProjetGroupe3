@@ -10,10 +10,11 @@ const clipboardIcon = <FontAwesomeIcon icon={ faClipboardList } />
 const AdminHome = () => {
 
     const [users, setUsers] = useState([]);
+    const history = useHistory();
 
     const fetchUsers = async () => {
         let body = {
-          'email': localStorage.getItem('email')
+          'email': localStorage.getItem('adminEmail')
         }
         const { data } = await axios.post(
           "http://127.0.0.1:5000/api/users/list_users", body
@@ -24,11 +25,19 @@ const AdminHome = () => {
     };
 
     useEffect(() => {
+        const email = localStorage.getItem('adminEmail');
+        if(!email) {
+          history.push('/Login');
+        }
         fetchUsers();
     }, []);
 
-    const checkUserDocuments = () => {
-        console.log("ok")
+    const checkUserDocuments = (user_email) => {
+        localStorage.setItem('selectedEmail', user_email)
+        history.push({
+            pathname: '/UserDocuments',
+            email: user_email
+        });
     }
 
     return (

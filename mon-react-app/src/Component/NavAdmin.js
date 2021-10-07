@@ -18,7 +18,8 @@ export default function NavigationAdmin() {
     const history = useHistory();
 
     const logout = () =>{ 
-        localStorage.removeItem('email')
+        localStorage.removeItem('selectedEmail')
+        localStorage.removeItem('adminEmail')
         history.push("/Login");
     }
   return (
