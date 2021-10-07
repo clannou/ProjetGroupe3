@@ -127,6 +127,24 @@ def download_file():
         return send_file("." + path, as_attachment=True)
     return custom_response({'error': "You are not allowed to download: " + filename}, 400)
 
+@user_api.route('/delete_file', methods=['DELETE'])
+def delete_item():
+    req_data = request.get_json()
+    mandatory_data = ['email', 'filename']
+    missing_data = check_missing_parameter(mandatory_data, req_data)
+    if missing_data:
+        return custom_response({
+            'error': 'Données non envoyé ' + User.user_mandatory_data_to_string(missing_data)
+        }, 400)
+    user_email = req_data['email']
+    user = User.get_user_by_email(user_email)
+    document = Document.query.filter_by(name=req_data['filename'])
+    allow_delete_file = Document.document_path_belong_to_user_id(path, user_id)
+    os.remove(os.path.join(app.config['UPLOAD_FOLDER'], document.name))
+    db.session.delete(document)
+    db.session.commit()
+    return custom_response({'success': "file " + document.name + " deleted successfully"}, 200)
+
 @user_api.route('/username', methods=['PUT'])
 def update_username():
     req_data = request.get_json()
