@@ -7,6 +7,7 @@ from modules.controllers import db
 from werkzeug.utils import secure_filename
 from modules.app import app
 from auth.tokens import Auth
+from werkzeug.security import generate_password_hash
 
 user_api = Blueprint('user', __name__)
 user_schema = UserSchema()
@@ -108,18 +109,97 @@ def list_upload_files():
 
 @user_api.route('/download_file', methods=['POST'])
 def download_file():
+    if request.get_json() is None:
+        return custom_response({'error': "Need email, filename in form"}, 400)
     req_data = request.get_json()
     user_email = req_data['email']
-    if user_email:
-        user = User.get_user_by_email(user_email)
-        if user is None:
-            return custom_response({'error': "Email does not exist"}, 400)
-        user_id = user.id
-        filename = req_data['filename']
-        path = app.config['UPLOAD_FOLDER'] + filename
-        allow_download_file = Document.document_path_belong_to_user_id(path, user_id)
-        if allow_download_file is True:
-            return send_file("." + path, as_attachment=True)
-        return custom_response({'error': "You are not allowed to download: " + filename}, 400)
-    return custom_response({'error': "Need email in form/body"}, 400)
+    user = User.get_user_by_email(user_email)
+    if user is None:
+        return custom_response({'error': "Email does not exist"}, 400)
+    user_id = user.id
+    filename = req_data['filename']
+    path = app.config['UPLOAD_FOLDER'] + filename
+    allow_download_file = Document.document_path_belong_to_user_id(path, user_id)
+    if allow_download_file is True:
+        """
+            Add a '.' before Path to go .. of UPLOAD FOLDER.
+        """
+        return send_file("." + path, as_attachment=True)
+    return custom_response({'error': "You are not allowed to download: " + filename}, 400)
+
+@user_api.route('/username', methods=['PUT'])
+def update_username():
+    req_data = request.get_json()
+    mandatory_data = ['email', 'username']
+    missing_data = check_missing_parameter(mandatory_data, req_data)
+    if missing_data:
+        return custom_response({
+            'error': 'Données non envoyé ' + User.user_mandatory_data_to_string(missing_data)
+        }, 400)
+    user_email = req_data['email']
+    user = User.get_user_by_email(user_email)
+    if not user:
+        return custom_response({
+            'error': 'User not found'
+        }, 400)
+    new_username = req_data['username']
+    update_username = user.update(dict(username=new_username))
+    db.session.commit()
+    return custom_response({
+        'success': 'Username changed sucessfully to: ' + new_username
+    }, 201)
+
+@user_api.route('/email', methods=['PUT'])
+def update_email():
+    req_data = request.get_json()
+    mandatory_data = ['email', 'new_email']
+    missing_data = check_missing_parameter(mandatory_data, req_data)
+    if missing_data:
+        return custom_response({
+            'error': 'Données non envoyé ' + User.user_mandatory_data_to_string(missing_data)
+        }, 400)
+    user_email = req_data['email']
+    user = User.get_user_by_email(user_email)
+    if not user:
+        return custom_response({
+            'error': 'User not found'
+        }, 400)
+    new_email = req_data['new_email']
+    update_email = user.update(dict(email=new_email))
+    db.session.commit()
+    return custom_response({
+        'success': 'Email changed sucessfully to: ' + new_email
+    }, 201)
+
+@user_api.route('/password', methods=['PUT'])
+def update_user_password():
+    req_data = request.get_json()
+    mandatory_data = ['password', 'newPassword', 'email']
+    missing_data = check_missing_parameter(mandatory_data, req_data)
+    if missing_data:
+        return custom_response({
+            'error': 'Données non envoyé ' + User.user_mandatory_data_to_string(missing_data)
+        }, 400)
+    user_email = req_data['email']
+    user = User.get_user_by_email(user_email)
+    if not user:
+        return custom_response({
+            'error': 'User not found'
+        }, 400)
+    if not user.check_password(req_data['password']):
+        return custom_response({
+            'error': 'Actual password incorrect'
+        }, 400)
+    update_password = user.update(dict(password=generate_password_hash(req_data['newPassword'])))
+    db.session.commit()
+    return custom_response({
+        'success': 'Password changed sucessfully'
+    }, 201)
+
+def check_missing_parameter(mandatory_data, req_data):
+    missing_data = []
+    for m in mandatory_data:
+        if m not in req_data:
+            missing_data.append(m)
+    return missing_data
 

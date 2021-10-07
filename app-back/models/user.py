@@ -74,6 +74,13 @@ class User(db.Model):
             return True
         return False
 
+    @staticmethod
+    def user_mandatory_data_to_string(li_data):
+        res = ""
+        for d in li_data:
+            res += d + ", "
+        return res[:-2]
+
     def __repr(self):
         return '<id {}>'.format(self.id)
 
