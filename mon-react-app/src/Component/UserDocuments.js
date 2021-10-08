@@ -76,7 +76,6 @@ const UserDocuments = () => {
 
     return (
         <div>
-            <Navigation/>
             <h1>Document de l'utilisateur</h1>
             <table>
             <thead>

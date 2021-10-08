@@ -2,15 +2,31 @@ import React, { useState, useEffect } from "react";
 import NavigationAdmin from './NavAdmin'
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faClipboardList } from '@fortawesome/free-solid-svg-icons'
+import { faClipboardList, faDownload, faTrash } from '@fortawesome/free-solid-svg-icons'
 import { useHistory } from "react-router-dom";
+import styles from '../table.module.css';
+
+import Popup from './Popup';
+import UserDocuments from "./UserDocuments";
 
 const clipboardIcon = <FontAwesomeIcon icon={ faClipboardList } />
+const downloadIcon = <FontAwesomeIcon icon={ faDownload } />
+const trashIcon = <FontAwesomeIcon icon={ faTrash } />
 
 const AdminHome = () => {
 
     const [users, setUsers] = useState([]);
     const history = useHistory();
+
+    const [documents, setDocuments] = useState("");
+
+    const [isOpen, setIsOpen] = useState(false);
+ 
+    const togglePopup = (user_email) => {
+      localStorage.setItem('selectedEmail', user_email)
+      setIsOpen(!isOpen);
+    }
+
 
     const fetchUsers = async () => {
         let body = {
@@ -41,32 +57,45 @@ const AdminHome = () => {
     }
 
     return (
-        <div className="app-container">
-            <NavigationAdmin/>
-            <h1>Welcome to the admin home page !</h1>
-            <h2>Liste des utilisateurs</h2>
-          <table>
-            <thead>
-              <tr>
-                <th>Nom des utilisateurs</th>
-                <th>Email des utilisateurs</th>
-                <th>Consulter les documents</th>
-              </tr>
-            </thead>
-            <tbody>
-              {users.map((user)=> (
-                <tr>
-                  <td>{user.username}</td>
-                  <td>{user.email}</td>
-                  <td>
-                  <button style={{'display': 'block', 'margin': 'auto' }} onClick={function(e) { checkUserDocuments(user.email); }}>{clipboardIcon}</button> 
-                  </td>
-                </tr>
-                ))}
-                
-            </tbody>
-          </table>
-        </div>
+      <div className="app-container">
+        <NavigationAdmin/>
+    <h1>Bienvenue sur votre espace administrateur</h1>
+    <h2>Vous pouvez retrouver ici la liste de vos utilisateurs, consulter leurs documents, les télécharger ou les supprimer.</h2>
+    <h3>Liste des utilisateurs</h3>
+    <table className={styles.table}>
+      <thead>
+        <tr>
+          <th className={styles.theadth}>Username</th>
+          <th className={styles.theadth}>Email</th>
+          <th className={styles.theadth}>Documents envoyés</th>
+        </tr>
+      </thead>
+      <tbody>
+        {users.map((user)=> (
+          <tr>
+            <td>{user.username}</td>
+            <td>{user.email}</td>
+            <td>
+              <div>
+                <input className={styles.tbodytdbutton} type="button" value="Consulter ses documents" onClick={function(e) {togglePopup(user.email) }}/>
+                {isOpen && 
+                <Popup content={<>
+                <UserDocuments/>
+                </>} handleClose={togglePopup}
+                />}
+              </div>
+            </td>
+          </tr>
+        ))}
+          
+      </tbody>
+    </table>
+
+  </div>
+
+
+
+        
     );
 
 };

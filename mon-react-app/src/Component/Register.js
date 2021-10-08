@@ -173,7 +173,6 @@ const Register = () => {
         </Button>
       
     </Box>
-    <h1>The username is : {username}</h1>
   </Flex>
   </ChakraProvider>
   );

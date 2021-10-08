@@ -1,0 +1,63 @@
+@font-face {
+    font-family: "ShareTech-Regular";
+    src: url("/src/ShareTech-Regular.ttf")
+   }
+
+.navBar{
+    background-color: #282c34;
+    height: 200px;
+    font-family: "ShareTech-Regular";
+}
+
+
+.navBrand {
+    color: white !important ;
+    font-size: 48px;
+    font-weight: bold;
+    text-decoration: underline;
+    margin-right: 30px;
+    margin-left: 30px;
+}
+
+.navLogo {
+    border: 3px solid white;
+    margin-right: 30px;
+    margin-left: 30px;
+}
+
+.nav{
+    display: flex;
+}
+
+.navLink {
+    font-size: 24px;
+    color: white !important ;
+    margin-right: 10px;
+    margin-left: 10px;
+    float: right;
+  display: block;
+  color: #f2f2f2;
+  text-align: center;
+  border-bottom: 3px solid transparent;
+}
+
+.navLink:hover {
+    border-bottom: 3px solid white;
+}
+
+.navLink.active {
+    border-bottom: 3px solid red;
+  }
+
+.logoutLogo{
+    color: white;
+    font-size: 2em;
+    padding-right: 10px;
+    padding-left: 10px;
+}
+
+.logoutLogo:hover{
+    border: 2px solid white;
+    border-radius: 30px;
+    cursor: pointer;
+}
